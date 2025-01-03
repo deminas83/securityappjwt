@@ -8,17 +8,20 @@ import org.springframework.stereotype.Service;
 import ru.demin.spbootsecurity.spbootsecurity.models.Person;
 import ru.demin.spbootsecurity.spbootsecurity.repo.PeopleRepo;
 import ru.demin.spbootsecurity.spbootsecurity.security.PersonDetails;
+import ru.demin.spbootsecurity.spbootsecurity.util.PersonValidator;
 
 import java.util.Optional;
 
 @Service
 public class PersonDetailsService implements UserDetailsService {
      private final PeopleRepo peopleRepo;
+     private final PersonValidator personValidator;
 
      @Autowired
-    public PersonDetailsService(PeopleRepo peopleRepo) {
+    public PersonDetailsService(PeopleRepo peopleRepo, PersonValidator personValidator) {
         this.peopleRepo = peopleRepo;
-    }
+         this.personValidator = personValidator;
+     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -28,5 +31,13 @@ public class PersonDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found");
 
         return new PersonDetails(person.get());
+    }
+
+    public void addPerson(String username, String password, String yearOfBirth){
+         Person person = new Person();
+         person.setPassword(password);
+         person.setUsername(username);
+         person.setYear_of_birth(Integer.parseInt(yearOfBirth));
+         peopleRepo.save(person);
     }
 }
