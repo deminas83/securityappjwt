@@ -31,29 +31,27 @@ public class Person {
     public Person() {
     }
 
-    public @NotEmpty(message = "имя не может быть пустым!") @Size(min = 2, max = 100, message = "Имя должно быть 2-100 символов") String getUsername() {
+    public String getUsername() {
         return username;
     }
 
-    public void setUsername(@NotEmpty(message = "имя не может быть пустым!") @Size(min = 2, max = 100, message = "Имя должно быть 2-100 символов") String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
-    @NotNull
-    @Min(value = 1900, message = "Год должен быть больше 1900")
     public int getYear_of_birth() {
         return year_of_birth;
     }
 
-    public void setYear_of_birth(@NotNull @Min(value = 1900, message = "Год должен быть больше 1900") int year_of_birth) {
+    public void setYear_of_birth(int year_of_birth) {
         this.year_of_birth = year_of_birth;
     }
 
-    public @NotNull String getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(@NotNull String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
