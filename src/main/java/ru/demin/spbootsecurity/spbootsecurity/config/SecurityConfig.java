@@ -23,23 +23,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/auth/login").permitAll()
-                        .requestMatchers("/auth/register").permitAll()
-                        .requestMatchers("/css/**").permitAll()
-                        .anyRequest().authenticated()
-                        )
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/auth/login")
-                        .loginProcessingUrl("/process_login")
-                        .defaultSuccessUrl("/hello", true)
-                        .failureUrl("/auth/login?error")
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/auth/login")
-                        .permitAll()
-                );
-        return http.build();
+                                .requestMatchers("/admin").hasRole("ADMIN")
+                                .requestMatchers("/auth/login", "/auth/register", "/css/**").permitAll()
+                                .anyRequest().hasAnyRole("USER", "ADMIN")
+                                        )
+                                .formLogin(formLogin -> formLogin
+                                        .loginPage("/auth/login")
+                                        .loginProcessingUrl("/process_login")
+                                        .defaultSuccessUrl("/hello", true)
+                                        .failureUrl("/auth/login?error")
+                                        .permitAll()
+                                )
+                                .logout(logout -> logout
+                                        .logoutSuccessUrl("/auth/login")
+                                        .permitAll()
+                                );
+                        return http.build();
     }
 
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

@@ -28,7 +28,18 @@ public class Person {
     @NotNull
     private String password;
 
+    @Column(name = "role")
+    private String role;
+
     public Person() {
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getUsername() {
