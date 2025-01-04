@@ -33,11 +33,4 @@ public class PersonDetailsService implements UserDetailsService {
         return new PersonDetails(person.get());
     }
 
-    public void addPerson(String username, String password, String yearOfBirth){
-         Person person = new Person();
-         person.setPassword(password);
-         person.setUsername(username);
-         person.setYear_of_birth(Integer.parseInt(yearOfBirth));
-         peopleRepo.save(person);
-    }
 }
