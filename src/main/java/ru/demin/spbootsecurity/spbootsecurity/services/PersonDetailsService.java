@@ -15,12 +15,10 @@ import java.util.Optional;
 @Service
 public class PersonDetailsService implements UserDetailsService {
      private final PeopleRepo peopleRepo;
-     private final PersonValidator personValidator;
 
      @Autowired
-    public PersonDetailsService(PeopleRepo peopleRepo, PersonValidator personValidator) {
+    public PersonDetailsService(PeopleRepo peopleRepo) {
         this.peopleRepo = peopleRepo;
-         this.personValidator = personValidator;
      }
 
     @Override

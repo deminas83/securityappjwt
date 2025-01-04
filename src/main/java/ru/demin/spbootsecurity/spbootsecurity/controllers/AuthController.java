@@ -19,7 +19,7 @@ public class AuthController {
     private final PersonValidator personValidator;
 
     @Autowired
-    public AuthController(PersonDetailsService personDetailsService, PersonService personService, PersonValidator personValidator) {
+    public AuthController(PersonService personService, PersonValidator personValidator) {
         this.personService = personService;
         this.personValidator = personValidator;
     }
@@ -36,7 +36,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public String addPerson (@ModelAttribute("person") @Valid Person person, BindingResult bindingResult){
-        System.out.println("dfsdfsdfsdf");
         personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors()) {return "auth/registration";}
         personService.addPerson(person);
