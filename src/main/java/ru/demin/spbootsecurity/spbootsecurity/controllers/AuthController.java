@@ -4,9 +4,14 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.demin.spbootsecurity.spbootsecurity.dto.AuthenticationDTO;
 import ru.demin.spbootsecurity.spbootsecurity.dto.PersonDTO;
 import ru.demin.spbootsecurity.spbootsecurity.models.Person;
 import ru.demin.spbootsecurity.spbootsecurity.security.JWTUtil;
@@ -24,13 +29,15 @@ public class AuthController {
     private final PersonValidator personValidator;
     private final JWTUtil jwtUtil;
     private final ModelMapper modelMapper;
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthController(PersonService personService, PersonValidator personValidator, JWTUtil jwtUtil, ModelMapper modelMapper) {
+    public AuthController(PersonService personService, PersonValidator personValidator, JWTUtil jwtUtil, ModelMapper modelMapper, AuthenticationManager authenticationManager) {
         this.personService = personService;
         this.personValidator = personValidator;
         this.jwtUtil = jwtUtil;
         this.modelMapper = modelMapper;
+        this.authenticationManager = authenticationManager;
     }
 
     @GetMapping("/login")
@@ -53,6 +60,21 @@ public class AuthController {
         personService.addPerson(person);
         String token = jwtUtil.generateToken(person.getUsername());
         return Map.of("jwt-token", token);
+    }
+
+    @PostMapping("/login")
+    public Map<String, Object> performLogin(@RequestBody AuthenticationDTO authenticationDTO){
+        UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(authenticationDTO.getUsername(),
+                authenticationDTO.getPassword());
+
+        try {
+            authenticationManager.authenticate(authenticationToken);
+        } catch (BadCredentialsException e){
+            return Map.of("message", "Incorrect credentials!");
+        }
+
+        String token = jwtUtil.generateToken(authenticationDTO.getUsername());
+        return Map.of("jwt-token",token);
     }
 
     public Person dtoToPerson(PersonDTO personDTO){
